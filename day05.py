@@ -5,8 +5,8 @@ def react(polymer):
 	i = 1
 	while i < len(polymer):
 		a = polymer[i-1]
-		b = polymer[i]
-		if ((a.upper() == a and b.lower() == b) or (a.lower() == a and b.upper() == b)) and a.upper() == b.upper():
+		b = polymer[i]		
+		if a != b and a.upper() == b.upper():
 		#a little bit faster:
 		#if abs(ord(a)-ord(b)) == 32:
 			del polymer[i-1:i+1]
@@ -18,4 +18,5 @@ reacted = react(list(lines[0]))
 
 print("Star 1:", len(reacted))
 #much faster when using leftover from part 1
-print("Star 2:", min(len(react([x for x in reacted if x.lower() != c])) for c in map(chr, range(ord('a'), ord('z') + 1))))
+from string import ascii_lowercase
+print("Star 2:", min(len(react([x for x in reacted if x.lower() != c])) for c in  ascii_lowercase))
