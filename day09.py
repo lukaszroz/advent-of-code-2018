@@ -1,4 +1,4 @@
-from collections import defaultdict
+from collections import defaultdict, deque
 
 # players_n = 9
 # last_marble = 25
@@ -6,37 +6,26 @@ players_n = 428
 # last_marble = 70825
 last_marble = 7082500
 
-class Node:
-	def __init__(self, value):
-		self.value = value
 
 scores = defaultdict(int)
 player = 1
-current = Node(0)
-current.next = current
-current.prev = current
+circle = deque([0])
 max_score = 0
 
-for marble in range(1, last_marble - (last_marble % 23)):
+# for marble in range(1, last_marble + 1):
+for marble in range(1, last_marble - (last_marble % 23) + 1):
 	if marble % 23 == 0:
 		scores[player] += marble
-		for _ in range(7):
-			current = current.prev
-		scores[player] += current.value
+		circle.rotate(7)
+		scores[player] += circle.pop()
+		circle.rotate(-1)
 		max_score = max(max_score, scores[player])
-		#remove node
-		current.prev.next = current.next
-		current.next.prev = current.prev
-		current = current.next		
 	else:
-		current = current.next
-		#add node
-		next_node = Node(marble)
-		next_node.prev = current
-		next_node.next = current.next
-		current.next.prev = next_node
-		current.next = next_node
-		current = next_node
+		circle.rotate(-1)
+		circle.append(marble)
+	# for m in circle:
+	# 	print("%4d" % m, end='')
+	# print()
 	player += 1
 	if player > players_n:
 		player = 1
